@@ -1,0 +1,45 @@
+# Hardcoded dictionary of stock prices
+stock_prices = {"AAPL": 180, "TSLA": 250, "MSFT": 320, "GOOGL": 150, "AMZN": 175}
+
+# Dictionary to store user's portfolio
+portfolio = {}
+
+# Get user input for stock names and quantities
+print("Enter your stocks (name and quantity). Type 'done' when finished.")
+while True:
+    stock_name = input("Enter stock ticker (e.g., AAPL) or 'done' to finish: ").upper()
+    if stock_name == "DONE":
+        break
+    if stock_name not in stock_prices:
+        print("Stock not found. Available stocks:", ", ".join(stock_prices.keys()))
+        continue
+    try:
+        quantity = int(input(f"Enter quantity for {stock_name}: "))
+        if quantity <= 0:
+            print("Quantity must be positive.")
+            continue
+        portfolio[stock_name] = quantity
+    except ValueError:
+        print("Please enter a valid number for quantity.")
+
+# Calculate total investment value
+total_value = 0
+print("\nYour Portfolio:")
+print("Stock\tQuantity\tPrice\tValue")
+print("-" * 40)
+for stock, quantity in portfolio.items():
+    value = quantity * stock_prices[stock]
+    total_value += value
+    print(f"{stock}\t{quantity}\t\t${stock_prices[stock]}\t${value:.2f}")
+print(f"\nTotal Portfolio Value: ${total_value:.2f}")
+
+# Optionally save to a CSV file
+save = input("\nWould you like to save the portfolio to a CSV file? (yes/no): ").lower()
+if save == "yes":
+    with open("portfolio.csv", "w") as file:
+        file.write("Stock,Quantity,Price,Value\n")
+        for stock, quantity in portfolio.items():
+            value = quantity * stock_prices[stock]
+            file.write(f"{stock},{quantity},{stock_prices[stock]},{value:.2f}\n")
+        file.write(f"Total,,,{total_value:.2f}\n")
+    print("Portfolio saved to portfolio.csv")
